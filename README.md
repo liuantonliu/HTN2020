@@ -1,5 +1,5 @@
 # Hack the North - 2021
-https://htn.azurewebsites.net
+https://skilled-creek-301921.ue.r.appspot.com/
 
 ## Installation
 ```bash
@@ -10,18 +10,18 @@ $ pip install -r requirements.txt
 
 ## Start
 ```bash
-$ flask run
+$ python main.py
 ```
 
 ## Deployment
 ```bash
-az webapp up
+$ gcloud app deploy
 ```
 
 ## Logs
 ``` bash
-az webapp log tail
+$ gcloud app logs tail -s default
 ```
 
 ## Tutorial
-https://docs.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=bash&pivots=python-framework-flask
+https://cloud.google.com/appengine/docs/flexible/python/quickstart
