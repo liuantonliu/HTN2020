@@ -14,9 +14,8 @@
 
 # [START gae_flex_quickstart]
 import logging
-
 from flask import Flask
-
+from flask import request
 
 app = Flask(__name__)
 
@@ -25,6 +24,12 @@ app = Flask(__name__)
 def hello():
     """Return a friendly HTTP greeting."""
     return 'Hello World!'
+
+
+@app.route('/messages', methods=['GET', 'POST'])
+def receive_message(): 
+    print(request.data)
+    return "Post endpoint"
 
 
 @app.errorhandler(500)
