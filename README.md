@@ -11,3 +11,15 @@ $ pip install -r requirements.txt
 ```bash
 $ flask run
 ```
+
+## Deployment
+```bash
+az webapp up
+```
+
+## Logs
+``` bash
+az webapp log tail
+```
+
+Tutorial: https://docs.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=bash&pivots=python-framework-flask
