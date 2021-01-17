@@ -22,7 +22,7 @@ headers = {
 app = Flask(__name__)
 
 
-@app.route('/', method=['GET', 'POST'])
+@app.route('/')
 def health_check():
     return 'HTN', 200
 
@@ -33,8 +33,6 @@ def receive_message():
         return "", 200
     data = request.get_json()
     print(f'Data received from Vonage: {json.dumps(data)}')
-    if "message" not in data:
-        return "", 200
     message = data['message']['content']['text']
     page_id = data['to']['id']
     user_id = data['from']['id']
