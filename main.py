@@ -27,8 +27,10 @@ def health_check():
     return 'HTN'
 
 
-@app.route('/messages', methods=['POST'])
+@app.route('/messages', methods=['GET', 'POST'])
 def receive_message():
+    if request.method == 'GET':
+        return "", 200
     data = request.get_json()
     print(f'Data received from Vonage: {json.dumps(data)}')
     message = data['message']['content']['text']
