@@ -22,7 +22,7 @@ headers = {
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def health_check():
     return 'HTN', 200
 
@@ -32,13 +32,15 @@ def receive_message():
     if request.method == 'GET':
         return "", 200
     data = request.get_json()
+    if 'message' not in data:
+        return "", 200
     print(f'Data received from Vonage: {json.dumps(data)}')
     message = data['message']['content']['text']
     page_id = data['to']['id']
     user_id = data['from']['id']
 
     #ML Model to generate response 
-    response = "this"
+    response = "hello shyam"
     json_model = {
         "to": { 
             "type": "messenger",
