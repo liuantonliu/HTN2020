@@ -2,8 +2,9 @@ import logging
 from flask import Flask, request
 import requests
 import json
-
-
+import collections
+import gpt_2_simple as gpt2
+from datetime import datetime
 url = "https://api.nexmo.com/v0.1/messages"
 
 # Mason
@@ -21,6 +22,48 @@ headers = {
 
 app = Flask(__name__)
 
+memory = collections.defaultdict(list)
+print("initializing session")
+sess = initRichardBot()
+# print("generating convo...")
+# gpt2.generate(sess, run_name='richardBot')
+prefixHistory = ""
+
+def initModel():
+    gpt2.download_gpt2(model_name="355M")
+    return 0
+
+def initRichardBot():
+    sess = gpt2.start_tf_sess()
+    gpt2.load_gpt2(sess, run_name='run1')
+    return sess
+
+def initShyamBot():
+    sess = gpt2.start_tf_sess()
+    gpt2.load_gpt2(sess, run_name='shyamBot')
+    return sess
+
+def initAntonBot():
+    sess = gpt2.start_tf_sess()
+    gpt2.load_gpt2(sess, run_name='AntonBot')
+    return sess
+
+def initMasonBot():
+    sess = gpt2.start_tf_sess()
+    gpt2.load_gpt2(sess, run_name='MasonBot')
+    return sess
+
+def getResponse(sess, msg):
+    prefixHistory += "Person: " + msg + "\n"
+    text = gpt2.generate(sess, length=200,temperature=0.6,prefix=prefixHistory, return_as_list=True)[0]
+    text = text[len(prefixHistory):]
+    botResponse = "Richard Yang:" + str(getResponse(sess, prefixHistory + "Richard Yang:"))
+    prefixHistory += botResponse
+    end = text.find("Person") 
+    return (text[:end-1]) 
+
+def input_to_output(message):
+    return None 
 
 @app.route('/', methods=['GET', 'POST'])
 def health_check():
@@ -40,7 +83,13 @@ def receive_message():
     user_id = data['from']['id']
 
     #ML Model to generate response 
-    response = "hello shyam"
+
+    msg = getResponse(sess, message, prefixHistory)
+    print(type(msg))
+
+    store_messages(message, user_id, msg)
+
+    response = "Hello World"
     json_model = {
         "to": { 
             "type": "messenger",
@@ -57,6 +106,7 @@ def receive_message():
             }
         }
     }
+
     print(f'Sending data to Vonage API: {json.dumps(json_model)}')
     res = requests.post(url, headers=headers, json=json_model)
     if not res.ok:
